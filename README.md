@@ -1,1 +1,2 @@
 # SystemyRozproszoneProjekt
+lets go
