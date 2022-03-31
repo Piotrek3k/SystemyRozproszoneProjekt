@@ -7,6 +7,8 @@ class   GameBoard:
             node2.color = node1.color
             node1.color = 0
             GameBoard.movecount += 1
+    def get_move_count(self):
+        return GameBoard.movecount
     def play(self):
         if GameBoard.movecount >= 200:
             return ("Game over")
