@@ -1,6 +1,7 @@
 from cgitb import text
 from tkinter import *
 from turtle import *
+import math
 
 def clear():
     #play_button.destroy()#narazie destroy bo forget cos odpierdala
@@ -8,7 +9,32 @@ def clear():
     turtle = Turtle()
     turtle.getscreen().bgcolor("#d9b38c")
     turtle.pensize(5)
-    turtle.forward(60)
+    turtle.penup()
+    turtle.right(90)
+    turtle.fd(120)
+    turtle.left(90)
+    turtle.pendown()
+    for i in range(8):
+        turtle.forward(120)
+        turtle.right(90)      
+        turtle.circle(20)
+        turtle.left(90)
+        turtle.penup()
+        turtle.forward(20)
+        turtle.left(112.5)
+        turtle.forward(20)
+        turtle.pendown()
+        turtle.fd((120*math.sqrt(4+2*math.sqrt(2))/2)-40)
+        turtle.right(90)
+        turtle.circle(20)
+        turtle.left(270)
+        turtle.fd((120*math.sqrt(4+2*math.sqrt(2))/2)-40)
+        turtle.penup()
+        turtle.fd(20)
+        turtle.left(112.5)
+        turtle.fd(20)
+        turtle.pendown()
+        
     #frame.destroy()
     #canvas.create_line(0,100,300,100, fill='red')
     #canvas.pack()
