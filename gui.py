@@ -5,12 +5,12 @@ from turtle import *
 def clear():
     #play_button.destroy()#narazie destroy bo forget cos odpierdala
     #exit_button.destroy()#dobra jednak inaczej to bedzie trzeba bo zolwik niszczy troche
-    #turtle = RawTurtle(canvas)
-    #turtle.getscreen().bgcolor("#d9b38c")
-    #turtle.pensize(5)
-    #turtle.forward(60)
-    frame.destroy()
-    canvas.create_line(0,100,300,100, fill='red')
+    turtle = Turtle()
+    turtle.getscreen().bgcolor("#d9b38c")
+    turtle.pensize(5)
+    turtle.forward(60)
+    #frame.destroy()
+    #canvas.create_line(0,100,300,100, fill='red')
     #canvas.pack()
 
 #Dobra tutaj zalezy czy idziemy pod tkintera czy zolwia
