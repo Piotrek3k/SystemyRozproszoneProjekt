@@ -1,5 +1,6 @@
 #Initial commit
 #haba
+#dsiufhiasodfjksodfjko
 
 #1 czarne 2 biale
 default_array=[1,1,1,1,2,2,2,2,0]
