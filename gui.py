@@ -11,8 +11,10 @@ def clear():
     turtle.pensize(5)
     turtle.penup()
     turtle.right(90)
-    turtle.fd(120)
-    turtle.left(90)
+    turtle.fd((160*(1+math.sqrt(2)))/2)
+    turtle.right(90)
+    turtle.fd(60)
+    turtle.left(180)
     turtle.pendown()
     for i in range(8):
         turtle.forward(120)
