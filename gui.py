@@ -21,35 +21,35 @@ def clear():
 
     turtle_button1 = Button(turtle_window,bd=0, image=black_badge,borderwidth=0)
     turtle_button1.configure(command=turtle_button1.changeColor)
-    turtle_button1.place(x=205,y=90,height=36,width=36)  
+    turtle_button1.place(x=209,y=96,height=26,width=26)  
     
     turtle_button2 = Button(turtle_window,bd=0, image=black_badge,borderwidth=0)
     turtle_button2.configure(command=turtle_button2.changeColor)
-    turtle_button2.place(x=93,y=205,height=36,width=36) 
+    turtle_button2.place(x=96,y=209,height=26,width=26) 
 
     turtle_button3 = Button(turtle_window,bd=0, image=black_badge,borderwidth=0)
     turtle_button3.configure(command=turtle_button3.changeColor)
-    turtle_button3.place(x=93,y=365,height=36,width=36) 
+    turtle_button3.place(x=96,y=370,height=26,width=26) 
 
     turtle_button4 = Button(turtle_window,bd=0, image=black_badge,borderwidth=0)
     turtle_button4.configure(command=turtle_button4.changeColor)
-    turtle_button4.place(x=205,y=477,height=36,width=36)  
+    turtle_button4.place(x=209,y=483,height=26,width=26)  
 
     turtle_button5 = Button(turtle_window,bd=0, image=white_badge,borderwidth=0)
     turtle_button5.configure(command=turtle_button5.changeColor)
-    turtle_button5.place(x=366,y=90,height=36,width=36)  
+    turtle_button5.place(x=370,y=96,height=26,width=26)  
 
     turtle_button6 = Button(turtle_window,bd=0, image=white_badge,borderwidth=0)
     turtle_button6.configure(command=turtle_button6.changeColor)
-    turtle_button6.place(x=478,y=205,height=36,width=36) 
+    turtle_button6.place(x=483,y=209,height=26,width=26) 
 
     turtle_button7 = Button(turtle_window,bd=0, image=white_badge,borderwidth=0)
     turtle_button7.configure(command=turtle_button7.changeColor)
-    turtle_button7.place(x=478,y=365,height=36,width=36) 
+    turtle_button7.place(x=483,y=370,height=26,width=26) 
 
     turtle_button8 = Button(turtle_window,bd=0, image=white_badge,borderwidth=0)
     turtle_button8.configure(command=turtle_button8.changeColor)
-    turtle_button8.place(x=366,y=477,height=36,width=36)  
+    turtle_button8.place(x=370,y=482,height=26,width=26)  
 
     turtle_button9 = Button(turtle_window,bd=0, bg='#d9b38c',borderwidth=0)
     turtle_button9.configure(command=turtle_button8.changeColor)
