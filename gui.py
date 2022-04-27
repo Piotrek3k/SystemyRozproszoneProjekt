@@ -2,12 +2,15 @@ from cgitb import text
 from tkinter import *
 from turtle import *
 import math
+from PIL import Image, ImageTk
 
-photo = PhotoImage(file = 'black.png')
+image1 = Image.open('blackbadgefixed2.png')
+image2 = Image.open('whitebadgefixed2.png')
+
 
 class Button(Button):
     def changeColor(self):
-        self.configure(image="whitebadgefixed2.png")
+        self.configure(image=white_badge)
 def clear():
     turtle_window=Toplevel(root,bg='#d9b38c')
     turtle_canvas=Canvas(turtle_window,width=600, height=600)
@@ -15,10 +18,10 @@ def clear():
     turtle_screen=TurtleScreen(turtle_canvas)
     turtle_screen.bgcolor("#d9b38c")
     turtle = RawTurtle(turtle_screen)
-    img_label=Label(image=photo)
-    turtle_button = Button(turtle_window, text="Press me",bd=0, image=photo)
-    #turtle_button.configure(command=turtle_button.changeColor)
-    turtle_button.place(x=160,y=250,height=40,width=80)   
+
+    turtle_button = Button(turtle_window, text="Press me",bd=0, image=black_badge,borderwidth=0)
+    turtle_button.configure(command=turtle_button.changeColor)
+    turtle_button.place(x=160,y=250,height=36,width=36)   
     turtle.pensize(5)
     turtle.hideturtle()
     turtle.speed(0)
@@ -58,6 +61,8 @@ def clear():
 root = Tk()
 root.title("Mū tōrere")
 
+black_badge= ImageTk.PhotoImage(image1)
+white_badge= ImageTk.PhotoImage(image2)
 
 canvas = Canvas(root, height = 500, width = 400)
 canvas.pack()

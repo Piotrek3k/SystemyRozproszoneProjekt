@@ -1,4 +1,5 @@
 from tkinter import *
+from PIL import Image, ImageTk
 #Initial commit
 #haba
 #dsiufhiasodfjksodfjko
@@ -64,10 +65,10 @@ def move():
                 print("no nie")
 
 root=Tk()
-root.geometry("800x800")
-photo=PhotoImage("syf.png")
-img_label=Label(image=photo)
-img_label.pack(pady=20)
-#test_button=Button(root,image=photo)
-#test_button.pack()
+root.geometry("400x400")
+image = Image.open('blackbadgefixed2.png')
+photo = ImageTk.PhotoImage(image)
+img_label=Label(root,image=photo)
+img_label.image=photo
+img_label.pack()
 root.mainloop()
