@@ -3,6 +3,7 @@ from tkinter import *
 from turtle import *
 import math
 from PIL import Image, ImageTk
+from gamelogic import *
 
 image1 = Image.open('blackbadgefixed2.png')
 image2 = Image.open('whitebadgefixed2.png')
@@ -53,7 +54,7 @@ def clear():
 
     turtle_button9 = Button(turtle_window,bd=0, bg='#d9b38c',borderwidth=0)
     turtle_button9.configure(command=turtle_button8.changeColor)
-    turtle_button9.place(x=285,y=285,height=36,width=36)  
+    turtle_button9.place(x=289,y=289,height=28,width=28)  
 
     turtle.pensize(5)
     turtle.hideturtle()
