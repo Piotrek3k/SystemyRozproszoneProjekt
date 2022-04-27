@@ -1,9 +1,3 @@
-from tkinter import *
-from PIL import Image, ImageTk
-#Initial commit
-#haba
-#dsiufhiasodfjksodfjko
-
 #1 czarne 2 biale
 default_array=[1,1,1,1,2,2,2,2,0]
 
@@ -63,12 +57,3 @@ def move():
                     break
             else:
                 print("no nie")
-
-root=Tk()
-root.geometry("400x400")
-image = Image.open('blackbadgefixed2.png')
-photo = ImageTk.PhotoImage(image)
-img_label=Label(root,image=photo)
-img_label.image=photo
-img_label.pack()
-root.mainloop()

@@ -19,9 +19,42 @@ def clear():
     turtle_screen.bgcolor("#d9b38c")
     turtle = RawTurtle(turtle_screen)
 
-    turtle_button = Button(turtle_window, text="Press me",bd=0, image=black_badge,borderwidth=0)
-    turtle_button.configure(command=turtle_button.changeColor)
-    turtle_button.place(x=160,y=250,height=36,width=36)   
+    turtle_button1 = Button(turtle_window,bd=0, image=black_badge,borderwidth=0)
+    turtle_button1.configure(command=turtle_button1.changeColor)
+    turtle_button1.place(x=205,y=90,height=36,width=36)  
+    
+    turtle_button2 = Button(turtle_window,bd=0, image=black_badge,borderwidth=0)
+    turtle_button2.configure(command=turtle_button2.changeColor)
+    turtle_button2.place(x=93,y=205,height=36,width=36) 
+
+    turtle_button3 = Button(turtle_window,bd=0, image=black_badge,borderwidth=0)
+    turtle_button3.configure(command=turtle_button3.changeColor)
+    turtle_button3.place(x=93,y=365,height=36,width=36) 
+
+    turtle_button4 = Button(turtle_window,bd=0, image=black_badge,borderwidth=0)
+    turtle_button4.configure(command=turtle_button4.changeColor)
+    turtle_button4.place(x=205,y=477,height=36,width=36)  
+
+    turtle_button5 = Button(turtle_window,bd=0, image=white_badge,borderwidth=0)
+    turtle_button5.configure(command=turtle_button5.changeColor)
+    turtle_button5.place(x=366,y=90,height=36,width=36)  
+
+    turtle_button6 = Button(turtle_window,bd=0, image=white_badge,borderwidth=0)
+    turtle_button6.configure(command=turtle_button6.changeColor)
+    turtle_button6.place(x=478,y=205,height=36,width=36) 
+
+    turtle_button7 = Button(turtle_window,bd=0, image=white_badge,borderwidth=0)
+    turtle_button7.configure(command=turtle_button7.changeColor)
+    turtle_button7.place(x=478,y=365,height=36,width=36) 
+
+    turtle_button8 = Button(turtle_window,bd=0, image=white_badge,borderwidth=0)
+    turtle_button8.configure(command=turtle_button8.changeColor)
+    turtle_button8.place(x=366,y=477,height=36,width=36)  
+
+    turtle_button9 = Button(turtle_window,bd=0, bg='#d9b38c',borderwidth=0)
+    turtle_button9.configure(command=turtle_button8.changeColor)
+    turtle_button9.place(x=285,y=285,height=36,width=36)  
+
     turtle.pensize(5)
     turtle.hideturtle()
     turtle.speed(0)
@@ -47,16 +80,12 @@ def clear():
         turtle.circle(20)
         turtle.left(270)
         turtle.fd((160*math.sqrt(4+2*math.sqrt(2))/2)-40)
-        #turtle.fd(120*math.sqrt(4+2*math.sqrt(2)))
         turtle.penup()
         turtle.fd(20)
         turtle.left(112.5)
         turtle.fd(20)
         turtle.pendown()
     turtle_window.mainloop()#zobaczymy dziala bez
-    #frame.destroy()
-    #canvas.create_line(0,100,300,100, fill='red')
-    #canvas.pack()
 
 root = Tk()
 root.title("Mū tōrere")
