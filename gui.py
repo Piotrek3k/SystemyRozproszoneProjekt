@@ -7,6 +7,7 @@ from gamelogic import *
 
 image1 = Image.open('blackbadgefixed2.png')
 image2 = Image.open('whitebadgefixed2.png')
+image3 = Image.open('neutralbadgefixed2.png')
 
 
 class Button(Button):
@@ -19,6 +20,8 @@ def clear():
     turtle_screen=TurtleScreen(turtle_canvas)
     turtle_screen.bgcolor("#d9b38c")
     turtle = RawTurtle(turtle_screen)
+
+    # node1 = Node(1,2,turtle_button1)
 
     turtle_button1 = Button(turtle_window,bd=0, image=black_badge,borderwidth=0)
     turtle_button1.configure(command=turtle_button1.changeColor)
@@ -52,9 +55,9 @@ def clear():
     turtle_button8.configure(command=turtle_button8.changeColor)
     turtle_button8.place(x=370,y=482,height=26,width=26)  
 
-    turtle_button9 = Button(turtle_window,bd=0, bg='#d9b38c',borderwidth=0)
+    turtle_button9 = Button(turtle_window,bd=0, image = neutral_badge,borderwidth=0)
     turtle_button9.configure(command=turtle_button8.changeColor)
-    turtle_button9.place(x=289,y=289,height=28,width=28)  
+    turtle_button9.place(x=289,y=289,height=26,width=26)  
 
     turtle.pensize(5)
     turtle.hideturtle()
@@ -93,6 +96,7 @@ root.title("Mū tōrere")
 
 black_badge= ImageTk.PhotoImage(image1)
 white_badge= ImageTk.PhotoImage(image2)
+neutral_badge=ImageTk.PhotoImage(image3)
 
 canvas = Canvas(root, height = 500, width = 400)
 canvas.pack()
