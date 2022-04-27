@@ -11,9 +11,11 @@ def clear():
     turtle_canvas.pack()
     turtle_screen=TurtleScreen(turtle_canvas)
     turtle_screen.bgcolor("#d9b38c")
+    whiteimg = PhotoImage("ButtonWhite.png")
     turtle = RawTurtle(turtle_screen)
-    turtle_button = Button(turtle_window, text="Press me",bd=0)
+    turtle_button = Button(turtle_window,image = whiteimg, text="Press me",bd=0)
     turtle_button.place(x=160,y=250,height=40,width=80)   
+    
     #pathetic_button=Button(turtle_screen,text="Press me")
     #pathetic_button.pack()
     turtle.pensize(5)
