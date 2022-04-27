@@ -1,3 +1,4 @@
+from tkinter import *
 #Initial commit
 #haba
 #dsiufhiasodfjksodfjko
@@ -61,3 +62,12 @@ def move():
                     break
             else:
                 print("no nie")
+
+root=Tk()
+root.geometry("800x800")
+photo=PhotoImage("syf.png")
+img_label=Label(image=photo)
+img_label.pack(pady=20)
+#test_button=Button(root,image=photo)
+#test_button.pack()
+root.mainloop()

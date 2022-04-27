@@ -3,21 +3,22 @@ from tkinter import *
 from turtle import *
 import math
 
+photo = PhotoImage(file = 'black.png')
+
+class Button(Button):
+    def changeColor(self):
+        self.configure(image="whitebadgefixed2.png")
 def clear():
-    #play_button.destroy()#narazie destroy bo forget cos odpierdala
-    #exit_button.destroy()#dobra jednak inaczej to bedzie trzeba bo zolwik niszczy troche
     turtle_window=Toplevel(root,bg='#d9b38c')
     turtle_canvas=Canvas(turtle_window,width=600, height=600)
     turtle_canvas.pack()
     turtle_screen=TurtleScreen(turtle_canvas)
     turtle_screen.bgcolor("#d9b38c")
-    whiteimg = PhotoImage("ButtonWhite.png")
     turtle = RawTurtle(turtle_screen)
-    turtle_button = Button(turtle_window,image = whiteimg, text="Press me",bd=0)
+    img_label=Label(image=photo)
+    turtle_button = Button(turtle_window, text="Press me",bd=0, image=photo)
+    #turtle_button.configure(command=turtle_button.changeColor)
     turtle_button.place(x=160,y=250,height=40,width=80)   
-    
-    #pathetic_button=Button(turtle_screen,text="Press me")
-    #pathetic_button.pack()
     turtle.pensize(5)
     turtle.hideturtle()
     turtle.speed(0)
@@ -38,7 +39,6 @@ def clear():
         turtle.left(112.5)
         turtle.forward(20)
         turtle.pendown()
-        #turtle.fd(120*math.sqrt(4+2*math.sqrt(2)))
         turtle.fd((160*math.sqrt(4+2*math.sqrt(2))/2)-40)
         turtle.right(90)
         turtle.circle(20)
@@ -55,7 +55,6 @@ def clear():
     #canvas.create_line(0,100,300,100, fill='red')
     #canvas.pack()
 
-#Dobra tutaj zalezy czy idziemy pod tkintera czy zolwia
 root = Tk()
 root.title("Mū tōrere")
 
@@ -74,7 +73,7 @@ exit_button = Button(frame, text = "Wyjdź",command=root.destroy)
 exit_button.place(x=160,y=250,height=40,width=80)
 
 mutorere_text = Text(frame,fg="#ff4d4d",bg = "#d9b38c",font=20,bd=0)
-mutorere_text.insert(INSERT,"Mū tōrere")#Ta wiem biednie wyglada, uroki tkintera
+mutorere_text.insert(INSERT,"Mū tōrere")
 mutorere_text.place(x=160,y=50,height=40,width=200)
 
 root.mainloop()
