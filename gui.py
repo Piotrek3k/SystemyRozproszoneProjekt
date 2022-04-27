@@ -6,9 +6,19 @@ import math
 def clear():
     #play_button.destroy()#narazie destroy bo forget cos odpierdala
     #exit_button.destroy()#dobra jednak inaczej to bedzie trzeba bo zolwik niszczy troche
-    turtle = Turtle()
-    turtle.getscreen().bgcolor("#d9b38c")
+    turtle_window=Toplevel(root,bg='#d9b38c')
+    turtle_canvas=Canvas(turtle_window,width=600, height=600)
+    turtle_canvas.pack()
+    turtle_screen=TurtleScreen(turtle_canvas)
+    turtle_screen.bgcolor("#d9b38c")
+    turtle = RawTurtle(turtle_screen)
+    turtle_button = Button(turtle_window, text="Press me",bd=0)
+    turtle_button.place(x=160,y=250,height=40,width=80)   
+    #pathetic_button=Button(turtle_screen,text="Press me")
+    #pathetic_button.pack()
     turtle.pensize(5)
+    turtle.hideturtle()
+    turtle.speed(0)
     turtle.penup()
     turtle.right(90)
     turtle.fd((160*(1+math.sqrt(2)))/2)
@@ -38,7 +48,7 @@ def clear():
         turtle.left(112.5)
         turtle.fd(20)
         turtle.pendown()
-        
+    turtle_window.mainloop()#zobaczymy dziala bez
     #frame.destroy()
     #canvas.create_line(0,100,300,100, fill='red')
     #canvas.pack()
