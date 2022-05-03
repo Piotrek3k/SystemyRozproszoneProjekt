@@ -6,7 +6,7 @@ class   GameBoard:
         if(node1.is_possible_to_move(node2)):
             node2.color = node1.color
             node1.color = 0
-
+            
             GameBoard.movecount += 1
     def get_move_count(self):
         return GameBoard.movecount
@@ -25,11 +25,10 @@ class   GameBoard:
 # No generalnie to propozycja tylko 
 
 class   Node:
-    def __init__(self,index,color,button):
+    def __init__(self,index,color):
         # Każdy węzeł ma numer (0 - 8) i kolor
         self.index=index
         self.color=color
-        self.button=button
 
     def is_possible_to_move(self,node):
         if node.color == 0: # Pole musi być puste
