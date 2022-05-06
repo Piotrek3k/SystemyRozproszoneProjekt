@@ -1,8 +1,10 @@
 from concurrent.futures import thread
 import socket as sc
+from ssl import SOL_SOCKET
 import threading
+import sys
 
-
+clients=set()
 
 #wolny port od kubicy, tim robi na 8080 i w sumie w dokumentacji tez tak
 PORT = 2223
@@ -22,6 +24,7 @@ DISCONNECT_MSG="UTRACONO POŁĄCZENIE"
 
 #tworzymy socket, AF_INET odpowiada za protokol IPV4, a SOCK_STREAM za streamowanie danych
 server=sc.socket(sc.AF_INET,sc.SOCK_STREAM)
+server.setsockopt(SOL_SOCKET,sc.SO_REUSEADDR,1)
 # ustawiamy serwer, chyba za duzo tych commitow
 server.bind(ADDR)
 
@@ -38,8 +41,11 @@ def handle_client(conn, addr):
             msg = conn.recv(msg_length).decode(FORMAT) # zeby bajty sie zgadzaly
             if msg == DISCONNECT_MSG:
                 connected=False 
-
+                conn.send(str.encode("Żegnam"))#wysyla klientowi siema
             print("Klient o adresie:",addr," wysłał wiadomość:",msg)
+            for client in clients:
+                client.send(str.encode(msg))
+            #conn.sendall(str.encode(msg))#wysyla kazdemu wiadomosc
     conn.close() #wyrzucamy klienta z serwera
 
 
@@ -50,10 +56,11 @@ def handle_client(conn, addr):
 # addr to adres ktory jest powiazany z socketem
 #tworzy sie nowy watek jesli jakis klient dolaczy
 def start():
-    server.listen()
+    server.listen(2)#2 maksymalnie
     print("Serwer o adresie: ", SERVER ," wystartował")
     while True:
         conn, addr = server.accept()
+        clients.add(conn)
         thread = threading.Thread(target=handle_client,args=(conn,addr))
         thread.start()
         print("Klienci na serwerze:", threading.activeCount()-1) #-1 bo serwer to tez watek, watki w pythonie to tez chyba procesy, no yebac

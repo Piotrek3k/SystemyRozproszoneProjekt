@@ -1,23 +1,85 @@
+
 from cgitb import text
+from threading import Thread
 from tkinter import *
 from turtle import *
 import math
 from PIL import Image, ImageTk
 from gamelogic import *
+import socket as sc
+
+
+
+
+
+PORT = 2223
+BUF_SIZE = 64
+SERVER = sc.gethostbyname(sc.gethostname())
+ADDR = (SERVER, PORT)
+FORMAT = 'utf-8'
+DISCONNECT_MSG="UTRACONO POŁĄCZENIE"
+
+
+
+client=sc.socket(sc.AF_INET,sc.SOCK_STREAM)
+#laczymy sie z serwerem
+client.connect(ADDR)
+
+def send(msg):
+    new_msg = msg.encode(FORMAT) #string -->bajty
+    msg_length=len(new_msg)
+    send_length = str(msg_length).encode(FORMAT)
+    send_length += b' ' * (BUF_SIZE - len(send_length)) #3ba dodac blanki zeby bylo 64
+    client.send(send_length)
+    client.send(new_msg)#troche dzike 
+    #return new_msg
+
+
+def recvMsg():
+    counter=0
+    tmp=0
+    while True:
+        msg=client.recv(BUF_SIZE).decode()
+        int_msg=int(msg)
+        if counter==0:
+            turtle_buttons[int_msg].configure(image=neutral_badge)
+            tmp=nodes[int_msg].color
+            nodes[int_msg].color=12
+            counter+=1
+            
+        elif counter==1:
+            if tmp==10:
+                turtle_buttons[int_msg].configure(image=black_badge)
+                nodes[int_msg].color=10
+            elif tmp==11:
+                turtle_buttons[int_msg].configure(image=white_badge)
+                nodes[int_msg].color=11
+            tmp=0
+            counter=0        
+
+
+recvThread=Thread(target=recvMsg)
+recvThread.daemon=True
+recvThread.start()
+
+
+
+
+
 
 image1 = Image.open('blackbadgefixed2.png')
 image2 = Image.open('whitebadgefixed2.png')
 image3 = Image.open('neutralbadgefixed2.png')
 
-N0 = Node(0,1)
-N1 = Node(1,1)
-N2 = Node(2,1)
-N3 = Node(3,1)
-N4 = Node(4,2)
-N5 = Node(5,2)
-N6 = Node(6,2)
-N7 = Node(7,2)
-N8 = Node(8,0)
+N0 = Node(0,10)
+N1 = Node(1,10)
+N2 = Node(2,10)
+N3 = Node(3,10)
+N4 = Node(4,11)
+N5 = Node(5,11)
+N6 = Node(6,11)
+N7 = Node(7,11)
+N8 = Node(8,12)
 
 nodes=[N0,N1,N2,N3,N4,N5,N6,N7,N8]
 
@@ -26,17 +88,25 @@ mutorere_Board=GameBoard([N0,N1,N2,N3,N4,N5,N6,N7,N8])
 class Button(Button):
     def changeColor(self,pos):
         node=nodes[pos]
-        color=node.color
+        str_pos=str(pos)
         for i in range(len(nodes)):
-            if nodes[i].color==0:
-               GameBoard.move(node,nodes[i])
-               self.configure(image=neutral_badge)
-               turtle_buttons[i].configure(image=black_badge)
-               if color==1:
-                   turtle_buttons[i].configure(image=black_badge)
-               elif color==2:
-                   turtle_buttons[i].configure(image=white_badge)
-               break
+            if nodes[i].color==12:
+               #str(send(str_pos))
+               possibility =node.is_possible_to_move(nodes[i])
+               print(possibility)
+               if possibility==True:
+                   str(send(str_pos))
+                   str_sec_pos=str(i)
+                   str(send(str_sec_pos))
+            #    if color==10:
+            #        turtle_buttons[i].configure(image=black_badge)
+            #    elif color==11:
+            #        turtle_buttons[i].configure(image=white_badge)
+               #break
+
+        #str(send("8"))
+
+
 
 
 def play():
@@ -58,7 +128,7 @@ def play():
     global turtle_button8
     global turtle_buttons
 
-
+        
 
     turtle_button0 = Button(turtle_window,bd=0, image=black_badge,borderwidth=0)
     turtle_button0.configure(command=lambda:turtle_button0.changeColor(0))
@@ -97,6 +167,8 @@ def play():
     turtle_button8.place(x=289,y=289,height=26,width=26)  
 
     turtle_buttons=[turtle_button0,turtle_button1,turtle_button2,turtle_button3,turtle_button4,turtle_button5,turtle_button6,turtle_button7,turtle_button8]
+
+
     turtle.pensize(5)
     turtle.hideturtle()
     turtle.speed(0)
@@ -127,6 +199,7 @@ def play():
         turtle.left(112.5)
         turtle.fd(20)
         turtle.pendown()
+
     turtle_window.mainloop()#zobaczymy dziala bez
 
 root = Tk()

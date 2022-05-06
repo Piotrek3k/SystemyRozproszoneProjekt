@@ -5,7 +5,7 @@ class   GameBoard:
     def move(node1,node2):
         if(node1.is_possible_to_move(node2)):
             node2.color = node1.color
-            node1.color = 0
+            node1.color = 12
             
             GameBoard.movecount += 1
     def get_move_count(self):
@@ -31,7 +31,7 @@ class   Node:
         self.color=color
 
     def is_possible_to_move(self,node):
-        if node.color == 0: # Pole musi być puste
+        if node.color == 12: # Pole musi być puste
             if self.index == node.index + 1 or self.index == node.index - 1: # Pole do którego chcemy przenieść żeton musi sąsiadować z naszym polem
                 return True
             elif self.index == node.index + 7 or self.index == node.index - 7: # Szczególny przypadek
