@@ -7,6 +7,7 @@ import math
 from PIL import Image, ImageTk
 from gamelogic import *
 import socket as sc
+import time
 
 
 
@@ -50,9 +51,27 @@ def send(msg):
     #return new_msg
 
 
-def recvMsg():
+def start():
     global player 
     player = -1
+    msg=client.recv(BUF_SIZE).decode()  
+    addresses=oneAddress(msg)
+    print("-----------------------")
+    print(addresses)
+    print(len(addresses))            
+    if(len(addresses)==1):
+        player=0
+    else:
+        player=1
+
+start()
+
+
+
+
+def recvMsg():
+    #global player 
+    #player = -1
     counter=0
     tmp=0
     while True:
@@ -74,16 +93,19 @@ def recvMsg():
                     turtle_buttons[int_msg].configure(image=white_badge)
                     nodes[int_msg].color=11
                 tmp=0
+                counter+=1
+            elif counter==2:
+                GameBoard.movecount=GameBoard.movecount+1
                 counter=0
-        else:
-            addresses=oneAddress(msg)
-            print("-----------------------")
-            print(addresses)
-            print(len(addresses))            
-            if(len(addresses)==1):
-                player=0
-            else:
-                player=1
+        # else:
+        #     addresses=oneAddress(msg)
+        #     print("-----------------------")
+        #     print(addresses)
+        #     print(len(addresses))            
+        #     if(len(addresses)==1):
+        #         player=0
+        #     else:
+        #         player=1
 
                 
 
@@ -116,28 +138,47 @@ N8 = Node(8,12)
 nodes=[N0,N1,N2,N3,N4,N5,N6,N7,N8]
 
 mutorere_Board=GameBoard([N0,N1,N2,N3,N4,N5,N6,N7,N8])
+GameBoard.movecount=16
 
 class Button(Button):
     def changeColor(self,pos):
-        node=nodes[pos]
-        str_pos=str(pos)
-        for i in range(len(nodes)):
-            if nodes[i].color==12:
-               #str(send(str_pos))
-               possibility =node.is_possible_to_move(nodes[i],player)
-               print(player)
-               print(possibility)
-               if possibility==True:
-                   str(send(str_pos))
-                   str_sec_pos=str(i)
-                   str(send(str_sec_pos))
-            #    if color==10:
-            #        turtle_buttons[i].configure(image=black_badge)
-            #    elif color==11:
-            #        turtle_buttons[i].configure(image=white_badge)
-               #break
+        print("Gracz ",player)
+        if player==0 and GameBoard.movecount%2==0:
+            print("Jak czarny to gyt")
+            node=nodes[pos]
+            str_pos=str(pos)
+            for i in range(len(nodes)):
+                if nodes[i].color==12:
+                    possibility =node.is_possible_to_move(nodes[i],player)
+                    #print(player)
+                    #print(possibility)
+                    if possibility==True:
+                        str(send(str_pos))
+                        str_sec_pos=str(i)
+                        str(send(str_sec_pos))
+                        time.sleep(1)# a wez kurwa nawet nie pytaj
+                        GameBoard.movecount+=1
+                        turn=GameBoard.movecount
+                        str(send(str(turn)))
+        elif player==1 and GameBoard.movecount%2!=0:
+            print("Jak bialy to gyt")
+            node=nodes[pos]
+            str_pos=str(pos)
+            for i in range(len(nodes)):
+                if nodes[i].color==12:
+                    possibility =node.is_possible_to_move(nodes[i],player)
+                   # print(player)
+                    #print(possibility)
+                    if possibility==True:
+                        str(send(str_pos))
+                        str_sec_pos=str(i)
+                        str(send(str_sec_pos))
+                        time.sleep(1)# jak u gory
+                        #heh jednak zamuli raz na jakis czas i wysle 1 wiadomosc zamiast 2
+                        GameBoard.movecount+=1
+                        turn=GameBoard.movecount
+                        str(send(str(turn)))
 
-        #str(send("8"))
 
 
 
