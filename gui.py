@@ -13,7 +13,7 @@ import socket as sc
 
 
 PORT = 2223
-BUF_SIZE = 64
+BUF_SIZE = 1024
 SERVER = sc.gethostbyname(sc.gethostname())
 ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
@@ -24,6 +24,18 @@ DISCONNECT_MSG="UTRACONO POŁĄCZENIE"
 client=sc.socket(sc.AF_INET,sc.SOCK_STREAM)
 #laczymy sie z serwerem
 client.connect(ADDR)
+
+def oneAddress(msg):
+    address=[]
+    addrs=""
+    for i in range(10):
+        addrs=addrs+msg[i]
+        if(i==5):
+            addrs=addrs+msg[i]
+            address.append(addrs)
+            addrs=""
+    return address
+
 
 def send(msg):
     new_msg = msg.encode(FORMAT) #string -->bajty
@@ -36,26 +48,40 @@ def send(msg):
 
 
 def recvMsg():
+    global player 
+    player = -1
     counter=0
     tmp=0
     while True:
-        msg=client.recv(BUF_SIZE).decode()
-        int_msg=int(msg)
-        if counter==0:
-            turtle_buttons[int_msg].configure(image=neutral_badge)
-            tmp=nodes[int_msg].color
-            nodes[int_msg].color=12
-            counter+=1
-            
-        elif counter==1:
-            if tmp==10:
-                turtle_buttons[int_msg].configure(image=black_badge)
-                nodes[int_msg].color=10
-            elif tmp==11:
-                turtle_buttons[int_msg].configure(image=white_badge)
-                nodes[int_msg].color=11
-            tmp=0
-            counter=0        
+        msg=client.recv(BUF_SIZE).decode()  
+        print(msg)     
+        if(msg.length!=10):
+            int_msg=int(msg)
+            if counter==0:
+                turtle_buttons[int_msg].configure(image=neutral_badge)
+                tmp=nodes[int_msg].color
+                nodes[int_msg].color=12
+                counter+=1
+                
+            elif counter==1:
+                if tmp==10:
+                    turtle_buttons[int_msg].configure(image=black_badge)
+                    nodes[int_msg].color=10
+                elif tmp==11:
+                    turtle_buttons[int_msg].configure(image=white_badge)
+                    nodes[int_msg].color=11
+                tmp=0
+                counter=0
+        else:
+            addresses=oneAddress(msg)
+            if(addresses[0]==str(ADDR)):
+                player=0
+            elif(addresses[1]==str(ADDR)):
+                player=1
+
+                
+
+
 
 
 recvThread=Thread(target=recvMsg)
@@ -92,7 +118,8 @@ class Button(Button):
         for i in range(len(nodes)):
             if nodes[i].color==12:
                #str(send(str_pos))
-               possibility =node.is_possible_to_move(nodes[i])
+               possibility =node.is_possible_to_move(nodes[i],player)
+               print(player)
                print(possibility)
                if possibility==True:
                    str(send(str_pos))
