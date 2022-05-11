@@ -28,7 +28,7 @@ client.connect(ADDR)
 def oneAddress(msg):
     address=[]
     addrs=""
-    for i in range(10):
+    for i in range(9):
         addrs=addrs+msg[i]
         if(i==5):
             addrs=addrs+msg[i]
@@ -55,7 +55,7 @@ def recvMsg():
     while True:
         msg=client.recv(BUF_SIZE).decode()  
         print(msg)     
-        if(msg.length!=10):
+        if(len(msg)!=10 and len(msg)!=5):
             int_msg=int(msg)
             if counter==0:
                 turtle_buttons[int_msg].configure(image=neutral_badge)

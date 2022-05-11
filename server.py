@@ -35,17 +35,17 @@ server.bind(ADDR)
 #ogarnia klienta
 def handle_client(conn, addr):
     print("Klient dołączył na serwer, jego adres:",addr)
-    gracze = []
     msg3=""
     for obj in players:
         tmp=obj.__getaddr__()[1]
         msg3=msg3+str(tmp)
-
-
+        print(msg3)
+    for client in clients:
+        client.send(str.encode(msg3))
+    #conn.send(str.encode(msg3))
     connected = True
     while connected:
         msg_length = conn.recv(BUF_SIZE).decode(FORMAT) #odbieramy wiadomosc od klienta, z bajtow zmieniamy to w stringa
-        msg2_length = conn.recv(BUF_SIZE).decode(FORMAT)
         if msg_length:
             msg_length = int(msg_length)
             msg = conn.recv(msg_length).decode(FORMAT) # zeby bajty sie zgadzaly
@@ -55,15 +55,7 @@ def handle_client(conn, addr):
             print("Klient o adresie:",addr," wysłał wiadomość:",msg)
             for client in clients:
                 client.send(str.encode(msg))
-            #conn.sendall(str.encode(msg))#wysyla kazdemu wiadomosc
-        if msg2_length:        
-           for client in clients:
-               new_msg = msg3.encode(FORMAT) #string -->bajty
-               msg_length=len(new_msg)
-               send_length = str(msg_length).encode(FORMAT)
-               send_length += b' ' * (BUF_SIZE - len(send_length)) #3ba dodac blanki zeby bylo 64
-               client.send(send_length)
-               client.send(new_msg)#troche dzike
+            #conn.sendall(str.encode(msg))#wysyla kazdemu wiadomosc   
     conn.close() #wyrzucamy klienta z serwera
 
 
