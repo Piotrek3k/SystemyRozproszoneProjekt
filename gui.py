@@ -28,10 +28,13 @@ client.connect(ADDR)
 def oneAddress(msg):
     address=[]
     addrs=""
-    for i in range(9):
+    x=10
+    if(len(msg)==5):      
+        x=5
+    for i in range(x):
         addrs=addrs+msg[i]
-        if(i==5):
-            addrs=addrs+msg[i]
+        if(i==4 or i==9):
+            #addrs=addrs+msg[i]
             address.append(addrs)
             addrs=""
     return address
@@ -74,9 +77,12 @@ def recvMsg():
                 counter=0
         else:
             addresses=oneAddress(msg)
-            if(addresses[0]==str(ADDR)):
+            print("-----------------------")
+            print(addresses)
+            print(len(addresses))            
+            if(len(addresses)==1):
                 player=0
-            elif(addresses[1]==str(ADDR)):
+            else:
                 player=1
 
                 
