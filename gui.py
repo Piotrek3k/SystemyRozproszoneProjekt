@@ -7,6 +7,7 @@ from turtle import *
 import math
 from unicodedata import numeric
 from PIL import Image, ImageTk
+from setuptools import Command
 from gamelogic import *
 import socket as sc
 import time
@@ -24,6 +25,7 @@ FORMAT = 'utf-8'
 DISCONNECT_MSG="UTRACONO POŁĄCZENIE"
 
 
+winner=-1
 
 client=sc.socket(sc.AF_INET,sc.SOCK_STREAM)
 #laczymy sie z serwerem
@@ -59,9 +61,9 @@ def start():
     player = -1
     msg=client.recv(BUF_SIZE).decode()  
     addresses=oneAddress(msg)
-    print("-----------------------")
-    print(addresses)
-    print(len(addresses))            
+    # print("-----------------------")
+    # print(addresses)
+    # print(len(addresses))            
     if(len(addresses)==1):
         player=0
     else:
@@ -88,7 +90,7 @@ def recvMsg():
             int_msg2=int(x)
             x=msg[2]+msg[3]
             int_msg3=int(x)
-            print(int_msg1)
+            # print(int_msg1)
             turtle_buttons[int_msg1].configure(image=neutral_badge)
             tmp=nodes[int_msg1].color
             nodes[int_msg1].color=12
@@ -137,12 +139,12 @@ nodes=[N0,N1,N2,N3,N4,N5,N6,N7,N8]
 mutorere_Board=GameBoard([N0,N1,N2,N3,N4,N5,N6,N7,N8])
 GameBoard.movecount=16
 
-winner=-1
 class Button(Button):
     def changeColor(self,pos):
-        print(GameBoard.movecount)
+        # print(GameBoard.movecount)
         if player==0 and GameBoard.movecount%2==0:
             #print("Jak czarny to gyt")
+            endGameCheck(0)
             node=nodes[pos]
             str_pos=str(pos)
             for i in range(len(nodes)):
@@ -158,6 +160,7 @@ class Button(Button):
 
         elif player==1 and GameBoard.movecount%2!=0:
             #print("Jak bialy to gyt")
+            endGameCheck(1)
             node=nodes[pos]
             str_pos=str(pos)
             for i in range(len(nodes)):
@@ -171,8 +174,41 @@ class Button(Button):
                         msg=str_pos+str(i)+str(turn)
                         str(send(str(msg)))
 
+def hasAnyMoves(player):
+    for i in range (len(nodes)):
+        if(player == 0 and nodes[i].color == 10):
+            for j in range (len(nodes)):
+                if(nodes[i].is_possible_to_move(nodes[j],player)):
+                    return 2          
+            return 1
+        elif(player == 1 and nodes[i].color == 11):
+            for j in range (len(nodes)):
+                if(nodes[i].is_possible_to_move(nodes[j],player)):
+                    return 2          
+            return 0
+    return 2
 
+def endGameCheck(player):
+    print("--------------------------")
+    print("player: "+str(player))
+    print("som ruchy?: " + str(hasAnyMoves(player)))
+    print("-------------------------")
+    if(GameBoard.movecount>=200):
+        winner=2
+        gameOver()
+    elif(hasAnyMoves(player)==1):
+        winner=1
+        gameOver()
+    elif(hasAnyMoves(player)==0):
+        winner==0
+        gameOver()
+    else:
+        pass
 
+# GameOver=Thread(target=endGameCheck)
+# GameOver.daemon=True
+# GameOver.start()    
+    
 
 def play():
     turtle_window=Toplevel(root,bg='#d9b38c')
