@@ -183,7 +183,8 @@ def play():
     turtle = RawTurtle(turtle_screen)
 
     global number_of_moves
-    number_of_moves = Label(turtle_window,bg = "#d9b38c", font = 14, text = "Liczba posunięć: "+ str(GameBoard.movecount - 16)).place(x = 40,y = 570)  
+    number_of_moves = Label(turtle_canvas,bg = "#d9b38c", font = 14, text = "Liczba posunięć: "+ str(GameBoard.movecount - 16))
+    number_of_moves.place(x = 40,y = 570)  
     
 
     global turtle_button0
