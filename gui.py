@@ -5,13 +5,15 @@ from threading import Thread
 from tkinter import *
 from turtle import *
 import math
+from unicodedata import numeric
 from PIL import Image, ImageTk
 from gamelogic import *
 import socket as sc
 import time
 
 
-
+#TO DO 
+#
 
 
 PORT = 2223
@@ -99,31 +101,8 @@ def recvMsg():
                 nodes[int_msg2].color=11
             tmp=0
             GameBoard.movecount=int_msg3
-
-
-
+            number_of_moves.config(text="Liczba posunięć: "+ str(GameBoard.movecount - 16))
             
-        # elif counter==1:
-        #     if tmp==10:
-        #         turtle_buttons[int_msg].configure(image=black_badge)
-        #         nodes[int_msg].color=10
-        #     elif tmp==11:
-        #         turtle_buttons[int_msg].configure(image=white_badge)
-        #         nodes[int_msg].color=11
-        #     tmp=0
-        #     counter+=1
-        # elif counter==2:
-        #     GameBoard.movecount=GameBoard.movecount+1
-        #     counter=0
-        # else:
-        #     addresses=oneAddress(msg)
-        #     print("-----------------------")
-        #     print(addresses)
-        #     print(len(addresses))            
-        #     if(len(addresses)==1):
-        #         player=0
-        #     else:
-        #         player=1
 
                 
 
@@ -158,6 +137,7 @@ nodes=[N0,N1,N2,N3,N4,N5,N6,N7,N8]
 mutorere_Board=GameBoard([N0,N1,N2,N3,N4,N5,N6,N7,N8])
 GameBoard.movecount=16
 
+winner=-1
 class Button(Button):
     def changeColor(self,pos):
         print(GameBoard.movecount)
@@ -201,6 +181,10 @@ def play():
     turtle_screen=TurtleScreen(turtle_canvas)
     turtle_screen.bgcolor("#d9b38c")
     turtle = RawTurtle(turtle_screen)
+
+    global number_of_moves
+    number_of_moves = Label(turtle_window,bg = "#d9b38c", font = 14, text = "Liczba posunięć: "+ str(GameBoard.movecount - 16)).place(x = 40,y = 570)  
+    
 
     global turtle_button0
     global turtle_button1
@@ -286,6 +270,24 @@ def play():
         turtle.pendown()
 
     turtle_window.mainloop()#zobaczymy dziala bez
+
+def gameOver():
+    r = Toplevel(root)
+    r.title("Koniec gry")
+
+    canvas = Canvas(r, height = 300, width = 400)
+    canvas.pack()
+    result_winner_text ="Błąd"
+    if (winner == player):
+        result_winner_text = "Wygrałeś"
+    elif(winner == 2):
+        result_winner_text = "Remis"
+    else:
+        result_winner_text = "Przegrałeś (debilu)"
+    result = Label(r,bg = "#d9b38c", font = 20, text = result_winner_text).place(x = 40,y = 30) 
+    exit_button = Button(canvas, text = "Wyjdź do menu głównego",command=r.destroy)
+    exit_button.place(x=160,y=200,height=50,width=200)
+    r.mainloop()
 
 root = Tk()
 root.title("Mū tōrere")
