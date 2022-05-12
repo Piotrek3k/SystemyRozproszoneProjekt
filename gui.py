@@ -1,6 +1,7 @@
 
 from cgitb import text
 from email import message
+from telnetlib import STATUS
 from threading import Thread
 from tkinter import *
 from turtle import *
@@ -104,6 +105,17 @@ def recvMsg():
             tmp=0
             GameBoard.movecount=int_msg3
             number_of_moves.config(text="Liczba posunięć: "+ str(GameBoard.movecount - 16))
+            black_move=hasAnyMoves(0)
+            white_move=hasAnyMoves(1)
+            if black_move!=white_move:
+                print(player)
+                if (black_move==True and player==0):
+                    status.configure(text="Wygrałeś")
+                elif (white_move==True and player==1):
+                    status.configure(text="Wygrałeś")
+                else:
+                    status.configure(text="Przegrałeś")
+
             
 
                 
@@ -144,7 +156,7 @@ class Button(Button):
         # print(GameBoard.movecount)
         if player==0 and GameBoard.movecount%2==0:
             #print("Jak czarny to gyt")
-            endGameCheck(0)
+            #endGameCheck(0)
             node=nodes[pos]
             str_pos=str(pos)
             for i in range(len(nodes)):
@@ -152,15 +164,14 @@ class Button(Button):
                     possibility =node.is_possible_to_move(nodes[i],player)
                     #print(player)
                     #print(possibility)
-                    if possibility==True:
+                    if possibility==True:            
                         GameBoard.movecount+=1
                         turn=GameBoard.movecount
                         msg=str_pos+str(i)+str(turn)
                         str(send(str(msg)))
-
         elif player==1 and GameBoard.movecount%2!=0:
             #print("Jak bialy to gyt")
-            endGameCheck(1)
+            #endGameCheck(1)
             node=nodes[pos]
             str_pos=str(pos)
             for i in range(len(nodes)):
@@ -168,46 +179,53 @@ class Button(Button):
                     possibility =node.is_possible_to_move(nodes[i],player)
                    # print(player)
                     #print(possibility)
-                    if possibility==True:
+                    if possibility==True:                        
                         GameBoard.movecount+=1
                         turn=GameBoard.movecount
                         msg=str_pos+str(i)+str(turn)
                         str(send(str(msg)))
 
 def hasAnyMoves(player):
+    #global player
     for i in range (len(nodes)):
         if(player == 0 and nodes[i].color == 10):
             for j in range (len(nodes)):
                 if(nodes[i].is_possible_to_move(nodes[j],player)):
-                    return 2          
-            return 1
+                    return True         
+            return False
         elif(player == 1 and nodes[i].color == 11):
             for j in range (len(nodes)):
                 if(nodes[i].is_possible_to_move(nodes[j],player)):
-                    return 2          
-            return 0
-    return 2
+                    return True         
+            return False
+    return True
 
-def endGameCheck(player):
-    print("--------------------------")
-    print("player: "+str(player))
-    print("som ruchy?: " + str(hasAnyMoves(player)))
-    print("-------------------------")
+def endGameCheck():
+    global winner
+    global player
+    whichOption=hasAnyMoves()
+    print("Jestem w endGameCheck")
+    print("Opcja"+str(whichOption))
+    print("Gracz"+str(player))
     if(GameBoard.movecount>=200):
         winner=2
         gameOver()
-    elif(hasAnyMoves(player)==1):
-        winner=1
+    elif whichOption!=2:
         gameOver()
-    elif(hasAnyMoves(player)==0):
-        winner==0
-        gameOver()
-    else:
-        pass
+    # elif(whichOption==player):
+    #     winner=1
+    #     gameOver()
+    # elif(whichOption==player):
+    #     winner==0
+    #     gameOver()
+    # else:
+    #     pass
+# print("--------------------------")
+    # print("player: "+str(player))
+    # print("som ruchy?: " + str(hasAnyMoves(player)))
+    # print("-------------------------")
 
-# GameOver=Thread(target=endGameCheck)
-# GameOver.daemon=True
-# GameOver.start()    
+   
     
 
 def play():
@@ -219,9 +237,11 @@ def play():
     turtle = RawTurtle(turtle_screen)
 
     global number_of_moves
-    number_of_moves = Label(turtle_canvas,bg = "#d9b38c", font = 14, text = "Liczba posunięć: "+ str(GameBoard.movecount - 16))
+    number_of_moves = Label(turtle_window,bg = "#d9b38c", font = 14, text = "Liczba posunięć: "+ str(GameBoard.movecount - 16))
     number_of_moves.place(x = 40,y = 570)  
-    
+    global status
+    status = Label(turtle_window,bg = "#d9b38c", font = 14, text = "Nierozstrzygnięte")
+    status.place(x = 320,y = 570) 
 
     global turtle_button0
     global turtle_button1
@@ -306,12 +326,13 @@ def play():
         turtle.fd(20)
         turtle.pendown()
 
-    turtle_window.mainloop()#zobaczymy dziala bez
+    turtle_window.mainloop()
 
 def gameOver():
+    print("Jestem w gameOver")
+    global winner
     r = Toplevel(root)
     r.title("Koniec gry")
-
     canvas = Canvas(r, height = 300, width = 400)
     canvas.pack()
     result_winner_text ="Błąd"
