@@ -1,5 +1,6 @@
 
 from cgitb import text
+from email import message
 from threading import Thread
 from tkinter import *
 from turtle import *
@@ -76,27 +77,44 @@ def recvMsg():
     tmp=0
     while True:
         msg=client.recv(BUF_SIZE).decode()  
-        print(msg)     
-        if(len(msg)!=10 and len(msg)!=5):
-            int_msg=int(msg)
-            if counter==0:
-                turtle_buttons[int_msg].configure(image=neutral_badge)
-                tmp=nodes[int_msg].color
-                nodes[int_msg].color=12
-                counter+=1
-                
-            elif counter==1:
-                if tmp==10:
-                    turtle_buttons[int_msg].configure(image=black_badge)
-                    nodes[int_msg].color=10
-                elif tmp==11:
-                    turtle_buttons[int_msg].configure(image=white_badge)
-                    nodes[int_msg].color=11
-                tmp=0
-                counter+=1
-            elif counter==2:
-                GameBoard.movecount=GameBoard.movecount+1
-                counter=0
+        #int_msg=int(msg)
+        if len(msg)!=10 and len(msg)!=5:
+            
+            x=msg[0]
+            int_msg1=int(x)
+            x=msg[1]
+            int_msg2=int(x)
+            x=msg[2]+msg[3]
+            int_msg3=int(x)
+            print(int_msg1)
+            turtle_buttons[int_msg1].configure(image=neutral_badge)
+            tmp=nodes[int_msg1].color
+            nodes[int_msg1].color=12
+            counter+=1
+            if tmp==10:
+                turtle_buttons[int_msg2].configure(image=black_badge)
+                nodes[int_msg2].color=10
+            elif tmp==11:
+                turtle_buttons[int_msg2].configure(image=white_badge)
+                nodes[int_msg2].color=11
+            tmp=0
+            GameBoard.movecount=int_msg3
+
+
+
+            
+        # elif counter==1:
+        #     if tmp==10:
+        #         turtle_buttons[int_msg].configure(image=black_badge)
+        #         nodes[int_msg].color=10
+        #     elif tmp==11:
+        #         turtle_buttons[int_msg].configure(image=white_badge)
+        #         nodes[int_msg].color=11
+        #     tmp=0
+        #     counter+=1
+        # elif counter==2:
+        #     GameBoard.movecount=GameBoard.movecount+1
+        #     counter=0
         # else:
         #     addresses=oneAddress(msg)
         #     print("-----------------------")
@@ -142,9 +160,9 @@ GameBoard.movecount=16
 
 class Button(Button):
     def changeColor(self,pos):
-        print("Gracz ",player)
+        print(GameBoard.movecount)
         if player==0 and GameBoard.movecount%2==0:
-            print("Jak czarny to gyt")
+            #print("Jak czarny to gyt")
             node=nodes[pos]
             str_pos=str(pos)
             for i in range(len(nodes)):
@@ -153,15 +171,13 @@ class Button(Button):
                     #print(player)
                     #print(possibility)
                     if possibility==True:
-                        str(send(str_pos))
-                        str_sec_pos=str(i)
-                        str(send(str_sec_pos))
-                        time.sleep(1)# a wez kurwa nawet nie pytaj
                         GameBoard.movecount+=1
                         turn=GameBoard.movecount
-                        str(send(str(turn)))
+                        msg=str_pos+str(i)+str(turn)
+                        str(send(str(msg)))
+
         elif player==1 and GameBoard.movecount%2!=0:
-            print("Jak bialy to gyt")
+            #print("Jak bialy to gyt")
             node=nodes[pos]
             str_pos=str(pos)
             for i in range(len(nodes)):
@@ -170,15 +186,10 @@ class Button(Button):
                    # print(player)
                     #print(possibility)
                     if possibility==True:
-                        str(send(str_pos))
-                        str_sec_pos=str(i)
-                        str(send(str_sec_pos))
-                        time.sleep(1)# jak u gory
-                        #heh jednak zamuli raz na jakis czas i wysle 1 wiadomosc zamiast 2
                         GameBoard.movecount+=1
                         turn=GameBoard.movecount
-                        str(send(str(turn)))
-
+                        msg=str_pos+str(i)+str(turn)
+                        str(send(str(msg)))
 
 
 
