@@ -51,7 +51,10 @@ def handle_client(conn, addr):
             msg = conn.recv(msg_length).decode(FORMAT) # zeby bajty sie zgadzaly
             if msg == DISCONNECT_MSG:
                 connected=False 
-                conn.send(str.encode("Żegnam"))#wysyla klientowi siema
+                #conn.send(str.encode("Żegnam"))#wysyla klientowi siema
+                clients.remove(conn)
+                players.clear()
+                break
             print("Klient o adresie:",addr," wysłał wiadomość:",msg)
             for client in clients:
                 client.send(str.encode(msg))
@@ -66,7 +69,7 @@ def handle_client(conn, addr):
 # addr to adres ktory jest powiazany z socketem
 #tworzy sie nowy watek jesli jakis klient dolaczy
 def start():
-    server.listen(2)#2 maksymalnie
+    server.listen(20)#2 maksymalnie
     print("Serwer o adresie: ", SERVER ," wystartował")
     while True:
         conn, addr = server.accept()

@@ -16,7 +16,7 @@ import socket as sc
 #jak klient ucieknie to wysyla wiadomosc siema
 #instrukcja
 
-
+# dane do połączenia z serwerem
 PORT = 2223
 BUF_SIZE = 1024
 SERVER = sc.gethostbyname(sc.gethostname())
@@ -31,6 +31,7 @@ client=sc.socket(sc.AF_INET,sc.SOCK_STREAM)
 #laczymy sie z serwerem
 client.connect(ADDR)
 
+#uporzadkowanie adresow otrzymanych z serwera
 def oneAddress(msg):
     address=[]
     addrs=""
@@ -44,7 +45,7 @@ def oneAddress(msg):
             addrs=""
     return address
 
-
+# wysyla wiadomosc na serwer
 def send(msg):
     new_msg = msg.encode(FORMAT) #string -->bajty
     msg_length=len(new_msg)
@@ -53,7 +54,7 @@ def send(msg):
     client.send(send_length)
     client.send(new_msg)#troche dzike 
 
-
+#ustala graczy
 def start():
     global player 
     player = -1
@@ -68,13 +69,16 @@ start()
 
 
 
-
+# odbiera i dekoduje wiadomosc z serwera
 def recvMsg():
     counter=0
     tmp=0
     while True:
-        msg=client.recv(BUF_SIZE).decode()  
-        if len(msg)!=10 and len(msg)!=5:            
+        msg=client.recv(BUF_SIZE).decode()
+        if len(msg)==0:
+            break
+        if len(msg)!=10 and len(msg)!=5: 
+            # dzieli wiadomosc na czesci            
             x=msg[0]
             int_msg1=int(x)
             x=msg[1]
@@ -94,7 +98,7 @@ def recvMsg():
             tmp=0
             GameBoard.movecount=int_msg3
             number_of_moves.config(text="Liczba posunięć: "+ str(GameBoard.movecount - 16))
-
+            #Sprawdzanie warunkow konca gry
             black_move=hasAnyMoves(0)
             white_move=hasAnyMoves(1)
             if black_move!=white_move:
@@ -113,7 +117,7 @@ def recvMsg():
                 
 
 
-
+#watek odpowiadajacy za odbieranie wiadmosci
 
 recvThread=Thread(target=recvMsg)
 recvThread.daemon=True
@@ -122,12 +126,13 @@ recvThread.start()
 
 
 
-
+#obrazki zetonow
 
 image1 = Image.open('blackbadgefixed2.png')
 image2 = Image.open('whitebadgefixed2.png')
 image3 = Image.open('neutralbadgefixed2.png')
 
+# inicjacja wezlow
 N0 = Node(0,10)
 N1 = Node(1,10)
 N2 = Node(2,10)
@@ -139,36 +144,49 @@ N7 = Node(7,11)
 N8 = Node(8,12)
 
 nodes=[N0,N1,N2,N3,N4,N5,N6,N7,N8]
-
+#inicjacja planszy
 mutorere_Board=GameBoard([N0,N1,N2,N3,N4,N5,N6,N7,N8])
 GameBoard.movecount=16
 
-
-class Button(Button):
+#modyfikacja klasy button w celu zmiany koloru (obrazu) przycisku
+#implementacja ruchu 
+class Button(Button): 
     def changeColor(self,pos):
-        if player==0 and GameBoard.movecount%2==0:
+        if(player==0 and GameBoard.movecount==16):
             node=nodes[pos]
             str_pos=str(pos)
-            for i in range(len(nodes)):
-                if nodes[i].color==12:
-                    possibility =node.is_possible_to_move(nodes[i],player)
-                    if possibility==True:            
-                        GameBoard.movecount+=1
-                        turn=GameBoard.movecount
-                        msg=str_pos+str(i)+str(turn)
-                        str(send(str(msg)))
+            if(pos == 0 or pos == 3):
+                for i in range(len(nodes)):
+                    if nodes[i].color==12:
+                        possibility =node.is_possible_to_move(nodes[i],player)
+                        if possibility==True:            
+                            GameBoard.movecount+=1
+                            turn=GameBoard.movecount
+                            msg=str_pos+str(i)+str(turn)
+                            str(send(str(msg)))
+        elif player==0 and GameBoard.movecount%2==0:
+                node=nodes[pos]
+                str_pos=str(pos)
+                for i in range(len(nodes)):
+                    if nodes[i].color==12:
+                        possibility =node.is_possible_to_move(nodes[i],player)
+                        if possibility==True:            
+                            GameBoard.movecount+=1
+                            turn=GameBoard.movecount
+                            msg=str_pos+str(i)+str(turn)
+                            str(send(str(msg)))
         elif player==1 and GameBoard.movecount%2!=0:
-            node=nodes[pos]
-            str_pos=str(pos)
-            for i in range(len(nodes)):
-                if nodes[i].color==12:
-                    possibility =node.is_possible_to_move(nodes[i],player)
-                    if possibility==True:                        
-                        GameBoard.movecount+=1
-                        turn=GameBoard.movecount
-                        msg=str_pos+str(i)+str(turn)
-                        str(send(str(msg)))
-
+                node=nodes[pos]
+                str_pos=str(pos)
+                for i in range(len(nodes)):
+                    if nodes[i].color==12:
+                        possibility =node.is_possible_to_move(nodes[i],player)
+                        if possibility==True:                        
+                            GameBoard.movecount+=1
+                            turn=GameBoard.movecount
+                            msg=str_pos+str(i)+str(turn)
+                            str(send(str(msg)))
+#sprawdzanie możliwosci wykonania ruchu (dla wszystkich węzłow)
 def hasAnyMoves(player):
     for i in range (len(nodes)):
         if(player == 0 and nodes[i].color == 10):
@@ -182,8 +200,9 @@ def hasAnyMoves(player):
     return False
 
        
-
+# okno z rozgrywką
 def play():
+
     turtle_window=Toplevel(root,bg='#d9b38c')
     turtle_canvas=Canvas(turtle_window,width=600, height=600)
     turtle_canvas.pack()
@@ -195,8 +214,8 @@ def play():
     number_of_moves = Label(turtle_window,bg = "#d9b38c", font = 14, text = "Liczba posunięć: "+ str(GameBoard.movecount - 16))
     number_of_moves.place(x = 40,y = 570)  
     global status
-    status = Label(turtle_window,bg = "#d9b38c", font = 14, text = "Nierozstrzygnięte")
-    status.place(x = 320,y = 570) 
+    status = Label(turtle_window,bg = "#d9b38c", font = 30, text = "")
+    status.place(x = 300,y = 20) 
 
     global turtle_button0
     global turtle_button1
@@ -209,7 +228,7 @@ def play():
     global turtle_button8
     global turtle_buttons
 
-        
+    #implementacja żetonów jako przycisków   
 
     turtle_button0 = Button(turtle_window,bd=0, image=black_badge,borderwidth=0)
     turtle_button0.configure(command=lambda:turtle_button0.changeColor(0))
@@ -249,7 +268,7 @@ def play():
 
     turtle_buttons=[turtle_button0,turtle_button1,turtle_button2,turtle_button3,turtle_button4,turtle_button5,turtle_button6,turtle_button7,turtle_button8]
 
-
+    #rysowanie planszy z wykorzystaniem turtle
     turtle.pensize(5)
     turtle.hideturtle()
     turtle.speed(0)
@@ -282,8 +301,29 @@ def play():
         turtle.pendown()
     turtle_window.resizable(False,False)
     turtle_window.mainloop()
+# Okienko instrukcji i informacji
+def gameInfo():
+    gameinfo=Toplevel(root,bg='#d9b38c')
+    gameinfocanvas=Canvas(gameinfo,bg='#d9b38c',width=600, height=600)
+    gameinfocanvas.pack()
+    
+    img = Image.open("Opis.png")
+    opisimg = ImageTk.PhotoImage(img)
+    # Create a Label Widget to display the text or Image
+    label = Label(gameinfo, image = opisimg)
+    label.place(x=50,y=50)
 
+    description_text = Text(gameinfo,fg="#ff4d4d",bg = "#d9b38c",font=20,bd=0)
+    description_text.insert(INSERT,"Opis gry")
+    description_text.place(x=300,y=50,height=120,width=200)
 
+    exit_button = Button(gameinfo, text = "Wyjdź",command=gameinfo.destroy)
+    exit_button.place(x=160,y=250,height=40,width=80)
+
+def destroy():
+    str(send(DISCONNECT_MSG))
+    root.destroy()
+# Okienko menu 
 root = Tk()
 root.title("Mū tōrere")
 
@@ -301,7 +341,7 @@ frame.place(relheight=1,relwidth=1)
 play_button = Button(frame, text = "Zagraj",command=play)
 play_button.place(x=160,y=150,height=40,width=80)
 
-exit_button = Button(frame, text = "Wyjdź",command=root.destroy)
+exit_button = Button(frame, text = "Wyjdź",command=lambda:destroy())
 exit_button.place(x=160,y=250,height=40,width=80)
 
 mutorere_text = Text(frame,fg="#ff4d4d",bg = "#d9b38c",font=20,bd=0)
