@@ -8,21 +8,6 @@ class   GameBoard:
             node1.color = 12
             
             GameBoard.movecount += 1
-    def get_move_count(self):
-        return GameBoard.movecount
-    def play(self):
-        if GameBoard.movecount >= 200:
-            return ("Game over")
-        if GameBoard.movecount % 2 == 0:
-            return
-            # Ruch czarnego
-        else:
-            return
-            # Ruch białego
-# Zajebałem sie pisząc te funkcje wyżej, chyba najłatwiej będzie to zrobić po zrobieniu gui
-# W gui też byśmy zrobili jakąś formę weryfikacji czy ten żeton można ruszyć
-# Albo nie wiem inaczej to 
-# No generalnie to propozycja tylko 
 
 class   Node:
     def __init__(self,index,color):
@@ -49,11 +34,6 @@ class   Node:
                 elif node.index == 8 or self.index == 8:   # Albo być w środku
                     return True
         return False
-    # def change_color(self):
-    #     if self.color == 1 or self.color == 2:
-    #         self.color=0
-    #         button=Button(turtle_window,bd=0, bg='#d9b38c',borderwidth=0)
-    #     else
        
 
 
