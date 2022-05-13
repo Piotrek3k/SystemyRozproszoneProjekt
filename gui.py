@@ -1,21 +1,20 @@
 
 from cgitb import text
-from email import message
-from telnetlib import STATUS
 from threading import Thread
 from tkinter import *
 from turtle import *
 import math
 from unicodedata import numeric
 from PIL import Image, ImageTk
-from setuptools import Command
 from gamelogic import *
 import socket as sc
-import time
 
 
-#TO DO 
-#
+# zostalo
+#uporzadkowac kod, dodac EWENTUALNIE komy
+#ruchu na poczatku nie mozna dodac
+#jak klient ucieknie to wysyla wiadomosc siema
+#instrukcja
 
 
 PORT = 2223
@@ -41,7 +40,6 @@ def oneAddress(msg):
     for i in range(x):
         addrs=addrs+msg[i]
         if(i==4 or i==9):
-            #addrs=addrs+msg[i]
             address.append(addrs)
             addrs=""
     return address
@@ -54,17 +52,13 @@ def send(msg):
     send_length += b' ' * (BUF_SIZE - len(send_length)) #3ba dodac blanki zeby bylo 64
     client.send(send_length)
     client.send(new_msg)#troche dzike 
-    #return new_msg
 
 
 def start():
     global player 
     player = -1
     msg=client.recv(BUF_SIZE).decode()  
-    addresses=oneAddress(msg)
-    # print("-----------------------")
-    # print(addresses)
-    # print(len(addresses))            
+    addresses=oneAddress(msg)           
     if(len(addresses)==1):
         player=0
     else:
@@ -76,22 +70,17 @@ start()
 
 
 def recvMsg():
-    #global player 
-    #player = -1
     counter=0
     tmp=0
     while True:
         msg=client.recv(BUF_SIZE).decode()  
-        #int_msg=int(msg)
-        if len(msg)!=10 and len(msg)!=5:
-            
+        if len(msg)!=10 and len(msg)!=5:            
             x=msg[0]
             int_msg1=int(x)
             x=msg[1]
             int_msg2=int(x)
             x=msg[2]+msg[3]
             int_msg3=int(x)
-            # print(int_msg1)
             turtle_buttons[int_msg1].configure(image=neutral_badge)
             tmp=nodes[int_msg1].color
             nodes[int_msg1].color=12
@@ -105,16 +94,19 @@ def recvMsg():
             tmp=0
             GameBoard.movecount=int_msg3
             number_of_moves.config(text="Liczba posunięć: "+ str(GameBoard.movecount - 16))
+
             black_move=hasAnyMoves(0)
             white_move=hasAnyMoves(1)
             if black_move!=white_move:
-                print(player)
+                
                 if (black_move==True and player==0):
                     status.configure(text="Wygrałeś")
                 elif (white_move==True and player==1):
                     status.configure(text="Wygrałeś")
                 else:
                     status.configure(text="Przegrałeś")
+            if GameBoard.movecount>=99:
+                status.configure(text="Remis")
 
             
 
@@ -151,34 +143,26 @@ nodes=[N0,N1,N2,N3,N4,N5,N6,N7,N8]
 mutorere_Board=GameBoard([N0,N1,N2,N3,N4,N5,N6,N7,N8])
 GameBoard.movecount=16
 
+
 class Button(Button):
     def changeColor(self,pos):
-        # print(GameBoard.movecount)
         if player==0 and GameBoard.movecount%2==0:
-            #print("Jak czarny to gyt")
-            #endGameCheck(0)
             node=nodes[pos]
             str_pos=str(pos)
             for i in range(len(nodes)):
                 if nodes[i].color==12:
                     possibility =node.is_possible_to_move(nodes[i],player)
-                    #print(player)
-                    #print(possibility)
                     if possibility==True:            
                         GameBoard.movecount+=1
                         turn=GameBoard.movecount
                         msg=str_pos+str(i)+str(turn)
                         str(send(str(msg)))
         elif player==1 and GameBoard.movecount%2!=0:
-            #print("Jak bialy to gyt")
-            #endGameCheck(1)
             node=nodes[pos]
             str_pos=str(pos)
             for i in range(len(nodes)):
                 if nodes[i].color==12:
                     possibility =node.is_possible_to_move(nodes[i],player)
-                   # print(player)
-                    #print(possibility)
                     if possibility==True:                        
                         GameBoard.movecount+=1
                         turn=GameBoard.movecount
@@ -186,47 +170,18 @@ class Button(Button):
                         str(send(str(msg)))
 
 def hasAnyMoves(player):
-    #global player
     for i in range (len(nodes)):
         if(player == 0 and nodes[i].color == 10):
             for j in range (len(nodes)):
                 if(nodes[i].is_possible_to_move(nodes[j],player)):
                     return True         
-            return False
         elif(player == 1 and nodes[i].color == 11):
             for j in range (len(nodes)):
                 if(nodes[i].is_possible_to_move(nodes[j],player)):
                     return True         
-            return False
-    return True
+    return False
 
-def endGameCheck():
-    global winner
-    global player
-    whichOption=hasAnyMoves()
-    print("Jestem w endGameCheck")
-    print("Opcja"+str(whichOption))
-    print("Gracz"+str(player))
-    if(GameBoard.movecount>=200):
-        winner=2
-        gameOver()
-    elif whichOption!=2:
-        gameOver()
-    # elif(whichOption==player):
-    #     winner=1
-    #     gameOver()
-    # elif(whichOption==player):
-    #     winner==0
-    #     gameOver()
-    # else:
-    #     pass
-# print("--------------------------")
-    # print("player: "+str(player))
-    # print("som ruchy?: " + str(hasAnyMoves(player)))
-    # print("-------------------------")
-
-   
-    
+       
 
 def play():
     turtle_window=Toplevel(root,bg='#d9b38c')
@@ -325,27 +280,9 @@ def play():
         turtle.left(112.5)
         turtle.fd(20)
         turtle.pendown()
-
+    turtle_window.resizable(False,False)
     turtle_window.mainloop()
 
-def gameOver():
-    print("Jestem w gameOver")
-    global winner
-    r = Toplevel(root)
-    r.title("Koniec gry")
-    canvas = Canvas(r, height = 300, width = 400)
-    canvas.pack()
-    result_winner_text ="Błąd"
-    if (winner == player):
-        result_winner_text = "Wygrałeś"
-    elif(winner == 2):
-        result_winner_text = "Remis"
-    else:
-        result_winner_text = "Przegrałeś (debilu)"
-    result = Label(r,bg = "#d9b38c", font = 20, text = result_winner_text).place(x = 40,y = 30) 
-    exit_button = Button(canvas, text = "Wyjdź do menu głównego",command=r.destroy)
-    exit_button.place(x=160,y=200,height=50,width=200)
-    r.mainloop()
 
 root = Tk()
 root.title("Mū tōrere")
