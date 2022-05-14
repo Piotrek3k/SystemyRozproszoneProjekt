@@ -1,4 +1,3 @@
-
 from cgitb import text
 from threading import Thread
 from tkinter import *
@@ -9,12 +8,6 @@ from PIL import Image, ImageTk
 from gamelogic import *
 import socket as sc
 
-
-# zostalo
-#uporzadkowac kod, dodac EWENTUALNIE komy
-#ruchu na poczatku nie mozna dodac
-#jak klient ucieknie to wysyla wiadomosc siema
-#instrukcja
 
 # dane do połączenia z serwerem
 PORT = 2223
@@ -126,11 +119,14 @@ recvThread.start()
 
 
 
-#obrazki zetonow
+#obrazki zetonow oraz tekstu
 
 image1 = Image.open('blackbadgefixed2.png')
 image2 = Image.open('whitebadgefixed2.png')
 image3 = Image.open('neutralbadgefixed2.png')
+img = Image.open("Opis.png")
+img1 = Image.open("Zasady.png")
+img2 = Image.open("Plansza.png")
 
 # inicjacja wezlow
 N0 = Node(0,10)
@@ -199,10 +195,12 @@ def hasAnyMoves(player):
                     return True         
     return False
 
-img = Image.open("Opis.png")
+
 
 # okno z rozgrywką
 def play():
+
+    play_button.destroy()
 
     turtle_window=Toplevel(root,bg='#d9b38c')
     turtle_canvas=Canvas(turtle_window,width=600, height=600)
@@ -302,27 +300,51 @@ def play():
         turtle.pendown()
     turtle_window.resizable(False,False)
     turtle_window.mainloop()
+
+
+
 # Okienko instrukcji i informacji
 def gameInfo():
     gameinfo=Toplevel(root,bg='#d9b38c')
-    gameinfocanvas=Canvas(gameinfo,bg='#d9b38c',width=800, height=600)
+    gameinfocanvas=Canvas(gameinfo,bg='#d9b38c',width=672, height=804)
     gameinfocanvas.pack()
-    # nie wiem czemu tego nie czyta, biały obraz sie pokazuje
-    opisimg = ImageTk.PhotoImage(img)
-    # Create a Label Widget to display the text or Image
-    label = Label(gameinfo, image = opisimg)
-    label.pack()
 
-    description_text = Text(gameinfo,fg="#ff4d4d",bg = "#d9b38c",font=20,bd=0)
+    desImg = ImageTk.PhotoImage(img)
+    boardImg=ImageTk.PhotoImage(img1)
+    rulesImg=ImageTk.PhotoImage(img2)
+    #Informacje dotyczace gry wyswietlone za pomoca obrazkow
+    desLabel = Label(gameinfocanvas, image = desImg,bg='#d9b38c')
+    desLabel.place(y=100)
+
+    rulesLabel = Label(gameinfocanvas, image = rulesImg,bg='#d9b38c')
+    rulesLabel.place(y=330)
+
+    boardLabel = Label(gameinfocanvas, image = boardImg,bg='#d9b38c')
+    boardLabel.place(y=514)
+
+    description_text = Text(gameinfocanvas,fg="#ff4d4d",bg = "#d9b38c",font=20,bd=0)
     description_text.insert(INSERT,"Opis gry")
-    description_text.place(x=300,y=50,height=100,width=120)
+    description_text.place(x=300,y=50,height=40,width=80)
 
-    exit_button = Button(gameinfo, text = "Wyjdź",command=gameinfo.destroy)
-    exit_button.place(x=160,y=250,height=40,width=80)
+    board_text = Text(gameinfocanvas,fg="#ff4d4d",bg = "#d9b38c",font=20,bd=0)
+    board_text.insert(INSERT,"Plansza")
+    board_text.place(x=300,y=280,height=40,width=80)
+
+    rules_text = Text(gameinfocanvas,fg="#ff4d4d",bg = "#d9b38c",font=20,bd=0)
+    rules_text.insert(INSERT,"Zasady")
+    rules_text.place(x=300,y=450,height=40,width=80)
+
+    exit_button = Button(gameinfocanvas, text = "Wyjdź",command=gameinfo.destroy)
+    exit_button.place(x=290,y=754,height=40,width=80)
+
+    gameinfo.mainloop()
 
 def destroy():
     str(send(DISCONNECT_MSG))
     root.destroy()
+
+
+
 # Okienko menu 
 root = Tk()
 root.title("Mū tōrere")
@@ -338,11 +360,15 @@ frame = Frame(root, bg = "#d9b38c")
 frame.place(relheight=1,relwidth=1)
 
 
-play_button = Button(frame, text = "Zagraj",command=gameInfo)
+play_button = Button(frame, text = "Zagraj",command=play)
 play_button.place(x=160,y=150,height=40,width=80)
 
 exit_button = Button(frame, text = "Wyjdź",command=lambda:destroy())
-exit_button.place(x=160,y=250,height=40,width=80)
+exit_button.place(x=160,y=350,height=40,width=80)
+
+description_button = Button(frame, text = "Opis gry",command=gameInfo)
+description_button.place(x=160,y=250,height=40,width=80)
+
 
 mutorere_text = Text(frame,fg="#ff4d4d",bg = "#d9b38c",font=20,bd=0)
 mutorere_text.insert(INSERT,"Mū tōrere")
