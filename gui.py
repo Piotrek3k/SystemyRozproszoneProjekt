@@ -199,7 +199,8 @@ def hasAnyMoves(player):
                     return True         
     return False
 
-       
+img = Image.open("Opis.png")
+
 # okno z rozgrywką
 def play():
 
@@ -304,18 +305,17 @@ def play():
 # Okienko instrukcji i informacji
 def gameInfo():
     gameinfo=Toplevel(root,bg='#d9b38c')
-    gameinfocanvas=Canvas(gameinfo,bg='#d9b38c',width=600, height=600)
+    gameinfocanvas=Canvas(gameinfo,bg='#d9b38c',width=800, height=600)
     gameinfocanvas.pack()
-    
-    img = Image.open("Opis.png")
+    # nie wiem czemu tego nie czyta, biały obraz sie pokazuje
     opisimg = ImageTk.PhotoImage(img)
     # Create a Label Widget to display the text or Image
     label = Label(gameinfo, image = opisimg)
-    label.place(x=50,y=50)
+    label.pack()
 
     description_text = Text(gameinfo,fg="#ff4d4d",bg = "#d9b38c",font=20,bd=0)
     description_text.insert(INSERT,"Opis gry")
-    description_text.place(x=300,y=50,height=120,width=200)
+    description_text.place(x=300,y=50,height=100,width=120)
 
     exit_button = Button(gameinfo, text = "Wyjdź",command=gameinfo.destroy)
     exit_button.place(x=160,y=250,height=40,width=80)
@@ -338,7 +338,7 @@ frame = Frame(root, bg = "#d9b38c")
 frame.place(relheight=1,relwidth=1)
 
 
-play_button = Button(frame, text = "Zagraj",command=play)
+play_button = Button(frame, text = "Zagraj",command=gameInfo)
 play_button.place(x=160,y=150,height=40,width=80)
 
 exit_button = Button(frame, text = "Wyjdź",command=lambda:destroy())

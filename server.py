@@ -69,7 +69,7 @@ def handle_client(conn, addr):
 # addr to adres ktory jest powiazany z socketem
 #tworzy sie nowy watek jesli jakis klient dolaczy
 def start():
-    server.listen(20)#2 maksymalnie
+    server.listen(2)#2 maksymalnie
     print("Serwer o adresie: ", SERVER ," wystartował")
     while True:
         conn, addr = server.accept()
