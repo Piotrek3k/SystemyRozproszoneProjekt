@@ -1,0 +1,2 @@
+Na jednym komputerze uruchamiamy server.py.
+Na kolejnych 2 komputerach run.py.
