@@ -148,40 +148,43 @@ GameBoard.movecount=16
 #implementacja ruchu 
 class Button(Button): 
     def changeColor(self,pos):
-        if(player==0 and GameBoard.movecount==16):
-            node=nodes[pos]
-            str_pos=str(pos)
-            if(pos == 0 or pos == 3):
-                for i in range(len(nodes)):
-                    if nodes[i].color==12:
-                        possibility =node.is_possible_to_move(nodes[i],player)
-                        if possibility==True:            
-                            GameBoard.movecount+=1
-                            turn=GameBoard.movecount
-                            msg=str_pos+str(i)+str(turn)
-                            str(send(str(msg)))
-        elif player==0 and GameBoard.movecount%2==0:
+        node=nodes[pos]
+        ugabuga=node.test(nodes,player)
+        if ugabuga==True:
+            if(player==0 and GameBoard.movecount==16):
                 node=nodes[pos]
                 str_pos=str(pos)
-                for i in range(len(nodes)):
-                    if nodes[i].color==12:
-                        possibility =node.is_possible_to_move(nodes[i],player)
-                        if possibility==True:            
-                            GameBoard.movecount+=1
-                            turn=GameBoard.movecount
-                            msg=str_pos+str(i)+str(turn)
-                            str(send(str(msg)))
-        elif player==1 and GameBoard.movecount%2!=0:
-                node=nodes[pos]
-                str_pos=str(pos)
-                for i in range(len(nodes)):
-                    if nodes[i].color==12:
-                        possibility =node.is_possible_to_move(nodes[i],player)
-                        if possibility==True:                        
-                            GameBoard.movecount+=1
-                            turn=GameBoard.movecount
-                            msg=str_pos+str(i)+str(turn)
-                            str(send(str(msg)))
+                if(pos == 0 or pos == 3):
+                    for i in range(len(nodes)):
+                        if nodes[i].color==12:
+                            possibility =node.is_possible_to_move(nodes[i],player)
+                            if possibility==True:            
+                                GameBoard.movecount+=1
+                                turn=GameBoard.movecount
+                                msg=str_pos+str(i)+str(turn)
+                                str(send(str(msg)))
+            elif player==0 and GameBoard.movecount%2==0:
+                    node=nodes[pos]
+                    str_pos=str(pos)
+                    for i in range(len(nodes)):
+                        if nodes[i].color==12:
+                            possibility =node.is_possible_to_move(nodes[i],player)
+                            if possibility==True:            
+                                GameBoard.movecount+=1
+                                turn=GameBoard.movecount
+                                msg=str_pos+str(i)+str(turn)
+                                str(send(str(msg)))
+            elif player==1 and GameBoard.movecount%2!=0:
+                    node=nodes[pos]
+                    str_pos=str(pos)
+                    for i in range(len(nodes)):
+                        if nodes[i].color==12:
+                            possibility =node.is_possible_to_move(nodes[i],player)
+                            if possibility==True:                        
+                                GameBoard.movecount+=1
+                                turn=GameBoard.movecount
+                                msg=str_pos+str(i)+str(turn)
+                                str(send(str(msg)))
 #sprawdzanie możliwosci wykonania ruchu (dla wszystkich węzłow)
 def hasAnyMoves(player):
     for i in range (len(nodes)):

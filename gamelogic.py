@@ -25,6 +25,7 @@ class   Node:
                 elif node.index == 8 or self.index == 8:   # Albo być w środku
                     return True
             
+            
         if(player == 1 and self.color==11):
              if node.color == 12: # Pole musi być puste
                 if self.index == node.index + 1 or self.index == node.index - 1: # Pole do którego chcemy przenieść żeton musi sąsiadować z naszym polem
@@ -34,6 +35,24 @@ class   Node:
                 elif node.index == 8 or self.index == 8:   # Albo być w środku
                     return True
         return False
+    def test(self,nodes,player):
+        if self.index==8:
+            return True
+        pos1=self.index-1
+        pos2=self.index+1
+        if pos1==-1:
+            pos1=7
+        if pos2==8:
+            pos2=0
+        if player==0 and self.color==10:
+            if nodes[pos1].color==10 and nodes[pos2].color==10:
+                return False
+        elif player==1 and self.color==11:
+            if nodes[pos1].color==11 and nodes[pos2].color==11:
+                return False
+        return True
+
+
        
 
 
